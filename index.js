@@ -1,45 +1,47 @@
-// Variables 
+let formInput = document.getElementById("userInput");
+let submitBtn = document.getElementById("submitBtn");
+let userData = document.getElementById("list-result");
 
-const addBtn = document.getElementById('add-task');
-const taskContainer = document.getElementById('task-container');
-const inputTask = document.getElementById("input-task");
+submitBtn.addEventListener("click", (e) => {
+  e.preventDefault();
 
-// Event listner for add button 
+  if (formInput.value.trim() === "") {
+    alert("Please enter the value");
+    return;
+  }
+  //userinput to list
+  const li = document.createElement("li");
+  li.textContent = formInput.value;
 
-addBtn.addEventListener('click',function(){
-    let task = document.createElement('div');
-    task.classList.add('task');
+  //adding cross btn to list
+  const span = document.createElement("span");
+  span.textContent = "";
+  span.classList.add("cross-btn");
+  li.appendChild(span);
 
-    let li = document.createElement('li');
-    li.innerText = `${inputTask.value}`;
-    task.appendChild(li);
-
-    let chekButton = document.createElement('button');
-    chekButton.innerHTML = '<i class="fa-solid fa-check"></i>';
-    chekButton.classList.add('checkButton');
-    task.appendChild(chekButton);
-
-    let deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-    deleteButton.classList.add('deleteTask');
-    task.appendChild(deleteButton);
-
-    // validation 
-
-    if(inputTask.value === ""){
-        alert("Please Enter a Task");
-    }else{
-        taskContainer.appendChild(task);
+  span.addEventListener("click", () => {
+    const confirmDelete = confirm("Are you sure want to delete thsi task?");
+    if (confirmDelete) {
+      li.remove();
     }
+  });
 
-    inputTask.value = "";
+  //add task edit btn
+  const taskEditbtn = document.createElement("button");
+  taskEditbtn.textContent = "Edit";
+  taskEditbtn.classList.add("edit-btn");
+  li.appendChild(taskEditbtn);
 
-    chekButton.addEventListener('click',function(){
-        chekButton.parentElement.style.textDecoration = "line-through"
-    })
+  //add fucntionality to edit btn
 
-    deleteButton.addEventListener('click',function(e){
-        let target = e.target;
-        target.parentElement.parentElement.remove();
-    })
+  taskEditbtn.addEventListener("click", () => {
+    const newTask = prompt("Edit your task:", li.textContent);
+    if (newTask !== null && newTask.trim() !== "") {
+      li.textContent = newTask.trim();
+      li.appendChild(span);
+      li.appendChild(taskEditbtn);
+    }
+  });
+  userData.appendChild(li);
+  formInput.value = "";
 });
